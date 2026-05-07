@@ -148,45 +148,13 @@
       justify-content: flex-end;
     }
 
-    /* Status.sys terminal */
-    .status-card {
-      background: #e4e5e9;
-      border-radius: 10px;
-      overflow: hidden;
+    /* Status.sys card image */
+    .status-card-img {
       width: 100%;
-      max-width: 660px;
+      max-width: 580px;
+      border-radius: 10px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .status-card-header {
-      background: #d8dadf;
-      padding: 11px 16px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .tl { width: 12px; height: 12px; border-radius: 50%; }
-    .tl-red   { background: #e74c3c; }
-    .tl-gray1 { background: #adb2bf; }
-    .tl-gray2 { background: #adb2bf; }
-    .status-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: #8a8fa0;
-      letter-spacing: 0.1em;
-      margin-left: 10px;
-    }
-    .status-body { padding: 22px 28px 26px; display: flex; gap: 20px; align-items: center; }
-    .status-info { flex: 1; min-width: 0; }
-    .ascii-portrait {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 5px;
-      line-height: 1.15;
-      color: #3a4060;
-      white-space: pre;
-      margin: 0;
-      flex-shrink: 0;
-      opacity: 0.72;
-      letter-spacing: 0.04em;
+      display: block;
     }
     .status-row {
       display: grid;
@@ -602,7 +570,7 @@
     .hero-name   { animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
     .hero-divider{ animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s both; }
     .hero-desc   { animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
-    .status-card { animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
+    .status-card-img { animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
     .scroll-hint { animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.6s  both; }
 
     /* Scroll-reveal for everything else */
@@ -653,25 +621,7 @@
       <p class="hero-desc">CS student at Vanderbilt building AI-powered health systems, full-stack platforms, and research pipelines at the edge of technology and human impact.</p>
     </div>
     <div class="hero-right">
-      <div class="status-card">
-        <div class="status-card-header">
-          <span class="tl tl-red"></span>
-          <span class="tl tl-gray1"></span>
-          <span class="tl tl-gray2"></span>
-          <span class="status-title">STATUS.SYS</span>
-        </div>
-        <div class="status-body">
-          <div class="status-info">
-            <div class="status-row"><span class="s-key">name:</span><span class="s-val">Sophie Lin</span></div>
-            <div class="status-row"><span class="s-key">role:</span><span class="s-val">CS Student &amp; AI Engineer</span></div>
-            <div class="status-row"><span class="s-key">location:</span><span class="s-val">Johns Creek, GA</span></div>
-            <div class="status-row"><span class="s-key">university:</span><span class="s-val">Vanderbilt University</span></div>
-            <div class="status-row"><span class="s-key">status:</span><span class="s-val">Open to Opportunities</span></div>
-            <div class="status-row"><span class="s-key">stack:</span><span class="s-val">[React, Python, Swift, Java]</span></div>
-          </div>
-          <pre class="ascii-portrait" id="ascii-portrait"></pre>
-        </div>
-      </div>
+      <img src="visualcache/profile%20card.png" alt="STATUS.SYS — Sophie Lin profile card" class="status-card-img">
     </div>
   </div>
 
@@ -1149,35 +1099,6 @@
     });
   });
 
-  // ASCII portrait
-  (function() {
-    const pre = document.getElementById('ascii-portrait');
-    if (!pre) return;
-    const img = new Image();
-    img.src = 'visualcache/Sophie%20Lin%20Headshot.png';
-    img.onload = function() {
-      const cols = 46;
-      const charAspect = 2.15;
-      const rows = Math.round(cols * (img.height / img.width) / charAspect);
-      const canvas = document.createElement('canvas');
-      canvas.width = cols;
-      canvas.height = rows;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, cols, rows);
-      const data = ctx.getImageData(0, 0, cols, rows).data;
-      const chars = ' .:-=+*#%@';
-      let out = '';
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const i = (y * cols + x) * 4;
-          const brightness = (data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114) / 255;
-          out += chars[Math.floor(brightness * (chars.length - 1))];
-        }
-        out += '\n';
-      }
-      pre.textContent = out;
-    };
-  })();
 </script>
 </body>
 </html>
