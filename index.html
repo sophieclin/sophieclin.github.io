@@ -604,6 +604,74 @@
       opacity: 1;
       transform: none;
     }
+
+    /* ── RESPONSIVE ───────────────────────────────────── */
+    @media (max-width: 768px) {
+      /* Nav */
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 18px; }
+      .nav-links a { font-size: 10px; letter-spacing: 0.1em; }
+
+      /* Hero */
+      #home { padding: 90px 24px 60px; }
+      .hero-content { grid-template-columns: 1fr; gap: 36px; }
+      .hero-name { font-size: clamp(56px, 14vw, 88px); }
+      .hero-right { justify-content: flex-start; }
+      .status-card { max-width: 100%; }
+      .scroll-hint { display: none; }
+
+      /* Projects */
+      #projects { padding: 70px 24px 80px; }
+      .projects-header { flex-direction: column; gap: 16px; margin-bottom: 28px; }
+      .proj-card { flex: 0 0 calc(80% - 9px); }
+
+      /* Experience */
+      #experience { padding: 70px 24px 80px; }
+      .exp-grid { grid-template-columns: 1fr; gap: 36px; }
+      .exp-blurb { margin-bottom: 28px; }
+      .stats { flex-direction: row; flex-wrap: wrap; gap: 20px 36px; }
+
+      /* Gallery */
+      #gallery { padding: 70px 24px 80px; }
+      .gallery-outer { grid-template-columns: 1fr; }
+      .gitem-circuit { height: 220px; }
+      .gitem-glass   { height: 220px; }
+      .gitem-water   { height: 220px; flex: none; }
+      .gallery-bottom-row .gitem { height: 160px; }
+
+      /* Contact */
+      #contact { padding: 70px 24px 0; }
+      .contact-cards { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 48px; }
+      .contact-blurb { margin-bottom: 32px; }
+      footer { flex-direction: column; gap: 10px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      /* Nav */
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 9px; }
+
+      /* Hero */
+      #home { padding: 80px 20px 50px; }
+      .hero-name { font-size: clamp(48px, 13vw, 72px); }
+
+      /* Projects */
+      #projects { padding: 60px 20px 70px; }
+      .proj-card { flex: 0 0 90%; }
+
+      /* Experience */
+      #experience { padding: 60px 20px 70px; }
+      .stats { flex-direction: column; }
+
+      /* Gallery */
+      #gallery { padding: 60px 20px 70px; }
+      .gallery-bottom-row { grid-template-columns: 1fr; }
+      .gallery-bottom-row .gitem { height: 200px; }
+
+      /* Contact */
+      #contact { padding: 60px 20px 0; }
+      .contact-cards { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
