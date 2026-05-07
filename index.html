@@ -148,14 +148,34 @@
       justify-content: flex-end;
     }
 
-    /* Status.sys card image */
-    .status-card-img {
-      width: 100%;
-      max-width: 580px;
+    /* Status.sys terminal */
+    .status-card {
+      background: #e4e5e9;
       border-radius: 10px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 530px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
-      display: block;
     }
+    .status-card-header {
+      background: #d8dadf;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .tl { width: 12px; height: 12px; border-radius: 50%; }
+    .tl-red   { background: #e74c3c; }
+    .tl-gray1 { background: #adb2bf; }
+    .tl-gray2 { background: #adb2bf; }
+    .status-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8a8fa0;
+      letter-spacing: 0.1em;
+      margin-left: 10px;
+    }
+    .status-body { padding: 22px 28px 26px; }
     .status-row {
       display: grid;
       grid-template-columns: 125px 1fr;
@@ -570,7 +590,7 @@
     .hero-name   { animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
     .hero-divider{ animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s both; }
     .hero-desc   { animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
-    .status-card-img { animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
+    .status-card     { animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
     .scroll-hint { animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.6s  both; }
 
     /* Scroll-reveal for everything else */
@@ -621,7 +641,22 @@
       <p class="hero-desc">CS student at Vanderbilt building AI-powered health systems, full-stack platforms, and research pipelines at the edge of technology and human impact.</p>
     </div>
     <div class="hero-right">
-      <img src="visualcache/profile%20card.png" alt="STATUS.SYS — Sophie Lin profile card" class="status-card-img">
+      <div class="status-card">
+        <div class="status-card-header">
+          <span class="tl tl-red"></span>
+          <span class="tl tl-gray1"></span>
+          <span class="tl tl-gray2"></span>
+          <span class="status-title">STATUS.SYS</span>
+        </div>
+        <div class="status-body">
+          <div class="status-row"><span class="s-key">name:</span><span class="s-val">Sophie Lin</span></div>
+          <div class="status-row"><span class="s-key">role:</span><span class="s-val">CS Student &amp; AI Engineer</span></div>
+          <div class="status-row"><span class="s-key">location:</span><span class="s-val">Johns Creek, GA</span></div>
+          <div class="status-row"><span class="s-key">university:</span><span class="s-val">Vanderbilt University</span></div>
+          <div class="status-row"><span class="s-key">status:</span><span class="s-val">Open to Opportunities</span></div>
+          <div class="status-row"><span class="s-key">stack:</span><span class="s-val">[React, Python, Swift, Java]</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
