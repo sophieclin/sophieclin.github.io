@@ -623,7 +623,6 @@
       /* Projects */
       #projects { padding: 70px 24px 80px; }
       .projects-header { flex-direction: column; gap: 16px; margin-bottom: 28px; }
-      .proj-card { flex: 0 0 calc(80% - 9px); }
 
       /* Experience */
       #experience { padding: 70px 24px 80px; }
@@ -657,7 +656,6 @@
 
       /* Projects */
       #projects { padding: 60px 20px 70px; }
-      .proj-card { flex: 0 0 90%; }
 
       /* Experience */
       #experience { padding: 60px 20px 70px; }
@@ -1151,16 +1149,21 @@
   let slide = 0;
   const GAP = 18;
 
+  function isMobile() { return window.innerWidth <= 768; }
+
   function initCards() {
     const wrapW = track.parentElement.offsetWidth;
-    const cardW = Math.floor((wrapW - GAP * 3) / 4);
+    const visible = isMobile() ? 1 : 4;
+    const cardW = visible === 1 ? wrapW : Math.floor((wrapW - GAP * (visible - 1)) / visible);
     cards.forEach(c => { c.style.flexBasis = cardW + 'px'; c.style.minWidth = cardW + 'px'; });
+    slide = Math.min(slide, cards.length - visible);
     slideTo(slide);
   }
 
   function slideTo(idx) {
+    const visible = isMobile() ? 1 : 4;
     const cardW = cards[0].offsetWidth + GAP;
-    slide = Math.max(0, Math.min(idx, cards.length - 4));
+    slide = Math.max(0, Math.min(idx, cards.length - visible));
     track.style.transform = `translateX(-${slide * cardW}px)`;
   }
 
