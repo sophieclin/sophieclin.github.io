@@ -613,6 +613,43 @@
     }
     .status-card-header:hover .term-hint { background: rgba(59,91,219,0.18); border-color: rgba(59,91,219,0.5); }
     @keyframes termCursor { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── CUSTOM CURSOR ────────────────────────────────── */
+    body { cursor: none; }
+    a, button, [role="button"], .proj-card, .exp-card, .ccard, label { cursor: none; }
+    #custom-cursor {
+      position: fixed;
+      width: 18px; height: 18px;
+      border: 2px solid #3b5bdb;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      top: 0; left: 0;
+      box-shadow: 0 0 8px rgba(59,91,219,0.5), inset 0 0 4px rgba(59,91,219,0.15);
+      transition: width 0.15s, height 0.15s, background 0.15s;
+      background: rgba(59,91,219,0.08);
+    }
+    #custom-cursor.hovering {
+      width: 28px; height: 28px;
+      background: rgba(59,91,219,0.15);
+      box-shadow: 0 0 14px rgba(59,91,219,0.6);
+    }
+    #custom-cursor.clicking {
+      width: 14px; height: 14px;
+      background: rgba(59,91,219,0.35);
+    }
+    .cursor-spark {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      top: 0; left: 0;
+      transform: translate(-50%, -50%);
+    }
+    @media (hover: none) {
+      body { cursor: auto; }
+      #custom-cursor { display: none; }
+    }
     .terminal-body {
       display: none;
       padding: 14px 18px 12px;
@@ -1409,6 +1446,87 @@
     }
   });
 
+  // ── Custom cursor with blue spark particles ──────────────────────────
+  (function() {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
+    const cur = document.createElement('div');
+    cur.id = 'custom-cursor';
+    document.body.appendChild(cur);
+
+    let mx = -100, my = -100, cx = -100, cy = -100;
+    let lastSparkTime = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+
+      const now = Date.now();
+      if (now - lastSparkTime > 30) {
+        lastSparkTime = now;
+        spawnSparks(e.clientX, e.clientY, 2);
+      }
+    });
+
+    document.addEventListener('mousedown', () => {
+      cur.classList.add('clicking');
+      spawnSparks(mx, my, 8);
+    });
+    document.addEventListener('mouseup', () => cur.classList.remove('clicking'));
+
+    const hoverSels = 'a, button, [role="button"], .proj-card, .exp-card, .ccard, label, .carousel-btn, #term-toggle';
+    document.querySelectorAll(hoverSels).forEach(el => {
+      el.addEventListener('mouseenter', () => cur.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cur.classList.remove('hovering'));
+    });
+
+    function spawnSparks(x, y, count) {
+      for (let i = 0; i < count; i++) {
+        const s = document.createElement('div');
+        s.className = 'cursor-spark';
+        const size = 3 + Math.random() * 4;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 40 + Math.random() * 60;
+        const lifetime = 400 + Math.random() * 300;
+        const hue = 220 + Math.random() * 30;
+        s.style.cssText = `
+          width:${size}px; height:${size}px;
+          background: hsl(${hue},90%,65%);
+          box-shadow: 0 0 ${size * 2}px hsl(${hue},90%,65%);
+          left:${x}px; top:${y}px;
+          opacity: 1;
+          transition: opacity ${lifetime}ms linear;
+        `;
+        document.body.appendChild(s);
+
+        const vx = Math.cos(angle) * speed;
+        const vy = Math.sin(angle) * speed - 20;
+        let startTime = null;
+
+        function animateSpark(ts) {
+          if (!startTime) startTime = ts;
+          const elapsed = ts - startTime;
+          const progress = elapsed / lifetime;
+          if (progress >= 1) { s.remove(); return; }
+          const ex = x + vx * progress;
+          const ey = y + vy * progress + 30 * progress * progress;
+          s.style.left = ex + 'px';
+          s.style.top  = ey + 'px';
+          s.style.opacity = 1 - progress;
+          requestAnimationFrame(animateSpark);
+        }
+        requestAnimationFrame(animateSpark);
+      }
+    }
+
+    function loop() {
+      cx += (mx - cx) * 0.18;
+      cy += (my - cy) * 0.18;
+      cur.style.transform = `translate(${cx - 9}px, ${cy - 9}px)`;
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
 
 </script>
 </body>
