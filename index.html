@@ -598,15 +598,21 @@
     .term-hint {
       margin-left: auto;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
+      font-size: 10px;
       color: #3b5bdb;
-      opacity: 0.45;
-      transition: opacity 0.2s;
-      letter-spacing: 0.05em;
-      animation: termBlink 2.4s ease-in-out infinite;
+      opacity: 1;
+      letter-spacing: 0.06em;
+      background: rgba(59,91,219,0.1);
+      padding: 3px 8px;
+      border-radius: 3px;
+      border: 1px solid rgba(59,91,219,0.25);
     }
-    .status-card-header:hover .term-hint { opacity: 1; animation: none; }
-    @keyframes termBlink { 0%,100%{opacity:0.45} 50%{opacity:0.15} }
+    .term-hint::after {
+      content: '_';
+      animation: termCursor 1s step-end infinite;
+    }
+    .status-card-header:hover .term-hint { background: rgba(59,91,219,0.18); border-color: rgba(59,91,219,0.5); }
+    @keyframes termCursor { 0%,100%{opacity:1} 50%{opacity:0} }
     .terminal-body {
       display: none;
       padding: 14px 18px 12px;
