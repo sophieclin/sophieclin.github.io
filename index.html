@@ -606,6 +606,15 @@
       padding: 3px 8px;
       border-radius: 3px;
       border: 1px solid rgba(59,91,219,0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .term-hint::before {
+      content: '↓';
+      font-size: 9px;
+      animation: termArrow 1s ease-in-out infinite;
     }
     .term-hint::after {
       content: '_';
@@ -613,6 +622,7 @@
     }
     .status-card-header:hover .term-hint { background: rgba(59,91,219,0.18); border-color: rgba(59,91,219,0.5); }
     @keyframes termCursor { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes termArrow { 0%,100%{transform:translateY(0)} 50%{transform:translateY(2px)} }
     .terminal-body {
       display: none;
       padding: 14px 18px 12px;
