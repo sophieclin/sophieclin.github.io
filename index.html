@@ -1532,7 +1532,7 @@
         for (let i = 1; i < trail.length; i++) {
           const age = ts - trail[i].t;
           const alpha = Math.max(0, 1 - age / TRAIL_MS);
-          const width  = 2.5 * alpha;
+          const width  = 5 * alpha;
 
           ctx.beginPath();
           ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
