@@ -593,6 +593,117 @@
     .status-card     { animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
     .scroll-hint { animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.6s  both; }
 
+    /* ── TERMINAL EASTER EGG ─────────────────────────── */
+    .status-card-header { cursor: pointer; }
+    .term-hint {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #3b5bdb;
+      opacity: 0;
+      transition: opacity 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .status-card-header:hover .term-hint { opacity: 1; }
+    .terminal-body {
+      display: none;
+      padding: 14px 18px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      min-height: 240px;
+      max-height: 300px;
+      overflow-y: auto;
+      flex-direction: column;
+    }
+    .status-card.terminal-mode .status-body { display: none; }
+    .status-card.terminal-mode .terminal-body { display: flex; }
+    .term-line { line-height: 1.6; color: #2a3060; white-space: pre-wrap; }
+    .term-line.tc { color: #3b5bdb; }
+    .term-line.dim { color: #8a90b0; }
+    .term-input-row { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+    .term-ps { color: #3b5bdb; white-space: nowrap; flex-shrink: 0; }
+    .term-input {
+      background: none; border: none; outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; color: #2a3060; flex: 1; width: 100%;
+      caret-color: #3b5bdb;
+    }
+
+    /* ── AI CHAT WIDGET ───────────────────────────────── */
+    .chat-fab {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 50px; height: 50px;
+      background: #3b5bdb; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 2000;
+      box-shadow: 0 4px 18px rgba(59,91,219,0.38);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: none;
+    }
+    .chat-fab:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(59,91,219,0.48); }
+    .chat-fab svg { width: 22px; height: 22px; stroke: white; }
+    .chat-win {
+      position: fixed; bottom: 90px; right: 28px;
+      width: 318px; height: 430px;
+      background: #f4f5f8; border: 1px solid #d4d8e8;
+      border-radius: 12px;
+      box-shadow: 0 10px 36px rgba(0,0,0,0.13);
+      z-index: 2000; display: flex; flex-direction: column;
+      overflow: hidden;
+      transition: opacity 0.22s, transform 0.22s;
+    }
+    .chat-win.hidden { opacity: 0; pointer-events: none; transform: translateY(12px); }
+    .chat-win-hdr {
+      background: #3b5bdb; color: white;
+      padding: 13px 16px;
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-win-hdr-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+    .chat-win-hdr-info { flex: 1; }
+    .chat-win-hdr-name { font-size: 13px; font-weight: 600; }
+    .chat-win-hdr-sub { font-size: 10px; opacity: 0.75; margin-top: 1px; }
+    .chat-win-close { background: none; border: none; color: white; cursor: pointer; font-size: 18px; opacity: 0.7; padding: 0; }
+    .chat-win-close:hover { opacity: 1; }
+    .chat-msgs {
+      flex: 1; overflow-y: auto;
+      padding: 14px 12px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .chat-msg {
+      max-width: 86%; padding: 9px 12px;
+      border-radius: 10px; font-size: 12.5px; line-height: 1.55;
+    }
+    .chat-msg.bot { background: #e4e8f4; color: #2a3060; align-self: flex-start; border-bottom-left-radius: 3px; }
+    .chat-msg.user { background: #3b5bdb; color: white; align-self: flex-end; border-bottom-right-radius: 3px; }
+    .chat-typing { display: flex; gap: 4px; align-items: center; padding: 9px 12px; background: #e4e8f4; border-radius: 10px; border-bottom-left-radius: 3px; align-self: flex-start; }
+    .chat-typing span { width: 6px; height: 6px; border-radius: 50%; background: #9098b0; animation: typingBounce 1.1s infinite; }
+    .chat-typing span:nth-child(2) { animation-delay: 0.18s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes typingBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+    .chat-input-row {
+      padding: 10px 12px; border-top: 1px solid #dde0ec;
+      display: flex; gap: 8px; flex-shrink: 0;
+    }
+    .chat-text-input {
+      flex: 1; border: 1px solid #d4d8e8; background: white;
+      border-radius: 6px; padding: 8px 10px;
+      font-size: 12.5px; font-family: 'Inter', sans-serif;
+      outline: none; color: #2a3060;
+    }
+    .chat-text-input:focus { border-color: #3b5bdb; }
+    .chat-send-btn {
+      background: #3b5bdb; color: white; border: none;
+      border-radius: 6px; width: 34px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .chat-send-btn:hover { background: #2f4ac0; }
+    .chat-send-btn svg { width: 14px; height: 14px; stroke: white; }
+    @media (max-width: 480px) {
+      .chat-win { width: calc(100vw - 32px); right: 16px; }
+      .chat-fab { bottom: 20px; right: 16px; }
+    }
+
     /* Scroll-reveal for everything else */
     .reveal {
       opacity: 0;
@@ -709,11 +820,12 @@
     </div>
     <div class="hero-right">
       <div class="status-card">
-        <div class="status-card-header">
+        <div class="status-card-header" id="term-toggle">
           <span class="tl tl-red"></span>
           <span class="tl tl-gray1"></span>
           <span class="tl tl-gray2"></span>
           <span class="status-title">STATUS.SYS</span>
+          <span class="term-hint">[ click to interact ]</span>
         </div>
         <div class="status-body">
           <div class="status-row"><span class="s-key">name:</span><span class="s-val">Sophie Lin</span></div>
@@ -722,6 +834,13 @@
           <div class="status-row"><span class="s-key">university:</span><span class="s-val">Vanderbilt University</span></div>
           <div class="status-row"><span class="s-key">status:</span><span class="s-val">Open to Opportunities</span></div>
           <div class="status-row"><span class="s-key">stack:</span><span class="s-val">[React, Python, Swift, Java]</span></div>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div id="term-output"></div>
+          <div class="term-input-row">
+            <span class="term-ps">sophie@portfolio:~$&nbsp;</span>
+            <input class="term-input" id="term-input" autocomplete="off" spellcheck="false" autofocus>
+          </div>
         </div>
       </div>
     </div>
@@ -1151,6 +1270,30 @@
   </div>
 </section>
 
+<!-- ── CHAT WIDGET ────────────────────────────────────── -->
+<button class="chat-fab" id="chat-fab" aria-label="Chat with Sophie's AI assistant">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+</button>
+<div class="chat-win hidden" id="chat-win">
+  <div class="chat-win-hdr">
+    <div class="chat-win-hdr-dot"></div>
+    <div class="chat-win-hdr-info">
+      <div class="chat-win-hdr-name">Sophie's AI Assistant</div>
+      <div class="chat-win-hdr-sub">Ask me anything about Sophie</div>
+    </div>
+    <button class="chat-win-close" id="chat-close">×</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="chat-msg bot">Hi! I'm Sophie's AI assistant. Ask me about her experience, projects, skills, or anything else 👋</div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-text-input" id="chat-input" placeholder="Ask something..." autocomplete="off">
+    <button class="chat-send-btn" id="chat-send">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
 <script>
   const navbar = document.getElementById('navbar');
   const navLinks = document.querySelectorAll('.nav-links a');
@@ -1231,6 +1374,196 @@
       });
     });
   });
+
+  // ── Terminal easter egg ───────────────────────────────
+  const termCard   = document.querySelector('.status-card');
+  const termToggle = document.getElementById('term-toggle');
+  const termOutput = document.getElementById('term-output');
+  const termInput  = document.getElementById('term-input');
+
+  const CMDS = {
+    help: () => [
+      '<span class="tc">Available commands:</span>',
+      '  whoami    · who is sophie?',
+      '  about     · background & bio',
+      '  skills    · tech stack',
+      '  projects  · selected work',
+      '  contact   · get in touch',
+      '  ls        · list sections',
+      '  git log   · recent activity',
+      '  clear     · clear terminal',
+      '  exit      · close terminal',
+    ],
+    whoami:   () => ['Sophie Lin — CS Student &amp; AI Engineer @ Vanderbilt'],
+    about:    () => [
+      'CS @ Vanderbilt University · 4.0 GPA · Atlanta, GA',
+      'Building AI-powered health systems &amp; full-stack platforms.',
+      '',
+      '<span class="tc">Currently:</span>',
+      '  Innovation Analyst Intern · Federal Reserve Bank of Atlanta',
+      '  Undergraduate Researcher  · MASI Lab, Vanderbilt',
+    ],
+    skills:   () => [
+      '<span class="tc">Languages:</span>   Python · Java · Swift · TypeScript · Bash',
+      '<span class="tc">Frameworks:</span>  React · Node.js · FastAPI',
+      '<span class="tc">Tools:</span>       MRtrix3 · Apptainer · HPC · Git · Docker',
+      '<span class="tc">Areas:</span>       AI/ML · Full-Stack · Neuroimaging · AR',
+    ],
+    projects: () => [
+      '<span class="tc">year  name                               type</span>',
+      '2026  Tennessee Coalition for Better Aging  Full Stack / Web',
+      '2025  Self-Correcting VLM QA w/ Claude      AI Research',
+      '2024  Mental Depression Care System         AI / Mobile',
+      '2023  LAAS                                  AI',
+      '2023  SEAS                                  AI',
+      '2022  AR Lung Auscultation System           AR / Mobile',
+      '2022  GATC                                  AI',
+    ],
+    contact:  () => [
+      '<span class="tc">email</span>     sophielinscl@gmail.com',
+      '<span class="tc">github</span>    github.com/sophieclin',
+      '<span class="tc">site</span>      sophieclin.github.io',
+    ],
+    ls:       () => ['home/  projects/  experience/  gallery/  contact/'],
+    pwd:      () => ['/portfolio/sophie-lin'],
+    date:     () => [new Date().toString()],
+    'git log': () => [
+      '<span class="tc">commit 54b436a</span> (HEAD → main)',
+      '  feat: Federal Reserve Digital Delivery team',
+      '',
+      '<span class="tc">commit 5cce5b4</span>',
+      '  research: co-author OHBM 2026 neuroimaging paper',
+      '',
+      '<span class="tc">commit 2d4654e</span>',
+      '  feat: join Federal Reserve Bank of Atlanta',
+      '',
+      '<span class="dim">(and many more...)</span>',
+    ],
+    sudo:            () => ['<span class="dim">Permission denied. Nice try 😄</span>'],
+    'sudo rm -rf /': () => ['<span class="dim">Nice try. This portfolio is well-protected.</span>'],
+    clear: () => 'CLEAR',
+    exit:  () => 'EXIT',
+  };
+
+  function termPrint(lines) {
+    lines.forEach(l => {
+      const div = document.createElement('div');
+      div.className = 'term-line';
+      div.innerHTML = l;
+      termOutput.appendChild(div);
+    });
+  }
+
+  function termRun(raw) {
+    const cmd = raw.trim().toLowerCase();
+    // echo command
+    const echo = document.createElement('div');
+    echo.className = 'term-line';
+    echo.innerHTML = `<span class="tc">sophie@portfolio:~$</span> ${raw}`;
+    termOutput.appendChild(echo);
+
+    const fn = CMDS[cmd];
+    if (!cmd) { /* empty */ }
+    else if (fn) {
+      const result = fn();
+      if (result === 'CLEAR') { termOutput.innerHTML = ''; return; }
+      if (result === 'EXIT')  { termCard.classList.remove('terminal-mode'); return; }
+      termPrint(result);
+    } else {
+      termPrint([`<span class="dim">command not found: ${raw} — type 'help' for options</span>`]);
+    }
+    // scroll to bottom
+    document.getElementById('terminal-body').scrollTop = 9999;
+  }
+
+  termToggle.addEventListener('click', () => {
+    termCard.classList.toggle('terminal-mode');
+    if (termCard.classList.contains('terminal-mode')) {
+      if (!termOutput.hasChildNodes()) {
+        termPrint([
+          '<span class="tc">STATUS.SYS — Interactive Mode</span>',
+          '<span class="dim">Type \'help\' for available commands, \'exit\' to close.</span>',
+          '',
+        ]);
+      }
+      setTimeout(() => termInput.focus(), 50);
+    }
+  });
+
+  termInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      termRun(termInput.value);
+      termInput.value = '';
+    }
+  });
+
+  // ── AI Chat widget ────────────────────────────────────
+  // Set your Cloudflare Worker URL here after deploying worker.js
+  const CHAT_ENDPOINT = '';
+
+  const chatFab   = document.getElementById('chat-fab');
+  const chatWin   = document.getElementById('chat-win');
+  const chatClose = document.getElementById('chat-close');
+  const chatMsgs  = document.getElementById('chat-msgs');
+  const chatInput = document.getElementById('chat-input');
+  const chatSend  = document.getElementById('chat-send');
+  let chatHistory = [];
+
+  chatFab.addEventListener('click', () => chatWin.classList.toggle('hidden'));
+  chatClose.addEventListener('click', () => chatWin.classList.add('hidden'));
+
+  function chatAppend(text, role) {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+    chatMsgs.appendChild(div);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return div;
+  }
+
+  function chatTyping() {
+    const el = document.createElement('div');
+    el.className = 'chat-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    chatMsgs.appendChild(el);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return el;
+  }
+
+  async function chatSendMsg() {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    chatInput.value = '';
+    chatAppend(msg, 'user');
+    chatHistory.push({ role: 'user', content: msg });
+
+    if (!CHAT_ENDPOINT) {
+      chatAppend("Chat backend isn't connected yet — reach Sophie directly at sophielinscl@gmail.com!", 'bot');
+      return;
+    }
+
+    const typing = chatTyping();
+    chatSend.disabled = true;
+    try {
+      const res = await fetch(CHAT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, history: chatHistory.slice(-8) }),
+      });
+      const { reply } = await res.json();
+      typing.remove();
+      chatAppend(reply, 'bot');
+      chatHistory.push({ role: 'assistant', content: reply });
+    } catch {
+      typing.remove();
+      chatAppend('Something went wrong — please try again or email sophielinscl@gmail.com.', 'bot');
+    } finally {
+      chatSend.disabled = false;
+    }
+  }
+
+  chatSend.addEventListener('click', chatSendMsg);
+  chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') chatSendMsg(); });
 
 </script>
 </body>
