@@ -638,13 +638,11 @@
       width: 14px; height: 14px;
       background: rgba(59,91,219,0.35);
     }
-    .cursor-spark {
+    #cursor-trail {
       position: fixed;
-      border-radius: 50%;
+      inset: 0;
       pointer-events: none;
-      z-index: 99998;
-      top: 0; left: 0;
-      transform: translate(-50%, -50%);
+      z-index: 99997;
     }
     @media (hover: none) {
       body { cursor: auto; }
@@ -1446,33 +1444,37 @@
     }
   });
 
-  // ── Custom cursor with blue spark particles ──────────────────────────
+  // ── Custom cursor with laser-pointer trail ───────────────────────────
   (function() {
     if (!window.matchMedia('(hover: hover)').matches) return;
 
+    // cursor circle
     const cur = document.createElement('div');
     cur.id = 'custom-cursor';
     document.body.appendChild(cur);
 
-    let mx = -100, my = -100, cx = -100, cy = -100;
-    let lastSparkTime = 0;
+    // canvas for trail
+    const canvas = document.createElement('canvas');
+    canvas.id = 'cursor-trail';
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
 
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX;
-      my = e.clientY;
-
-      const now = Date.now();
-      if (now - lastSparkTime > 30) {
-        lastSparkTime = now;
-        spawnSparks(e.clientX, e.clientY, 2);
-      }
+    window.addEventListener('resize', () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
 
-    document.addEventListener('mousedown', () => {
-      cur.classList.add('clicking');
-      spawnSparks(mx, my, 8);
-    });
-    document.addEventListener('mouseup', () => cur.classList.remove('clicking'));
+    // trail: array of {x, y, t}
+    const TRAIL_MS = 320;
+    const trail = [];
+    let mx = -200, my = -200, cx = -200, cy = -200;
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    document.addEventListener('mousedown', () => cur.classList.add('clicking'));
+    document.addEventListener('mouseup',   () => cur.classList.remove('clicking'));
 
     const hoverSels = 'a, button, [role="button"], .proj-card, .exp-card, .ccard, label, .carousel-btn, #term-toggle';
     document.querySelectorAll(hoverSels).forEach(el => {
@@ -1480,49 +1482,48 @@
       el.addEventListener('mouseleave', () => cur.classList.remove('hovering'));
     });
 
-    function spawnSparks(x, y, count) {
-      for (let i = 0; i < count; i++) {
-        const s = document.createElement('div');
-        s.className = 'cursor-spark';
-        const size = 3 + Math.random() * 4;
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 40 + Math.random() * 60;
-        const lifetime = 400 + Math.random() * 300;
-        const hue = 220 + Math.random() * 30;
-        s.style.cssText = `
-          width:${size}px; height:${size}px;
-          background: hsl(${hue},90%,65%);
-          box-shadow: 0 0 ${size * 2}px hsl(${hue},90%,65%);
-          left:${x}px; top:${y}px;
-          opacity: 1;
-          transition: opacity ${lifetime}ms linear;
-        `;
-        document.body.appendChild(s);
-
-        const vx = Math.cos(angle) * speed;
-        const vy = Math.sin(angle) * speed - 20;
-        let startTime = null;
-
-        function animateSpark(ts) {
-          if (!startTime) startTime = ts;
-          const elapsed = ts - startTime;
-          const progress = elapsed / lifetime;
-          if (progress >= 1) { s.remove(); return; }
-          const ex = x + vx * progress;
-          const ey = y + vy * progress + 30 * progress * progress;
-          s.style.left = ex + 'px';
-          s.style.top  = ey + 'px';
-          s.style.opacity = 1 - progress;
-          requestAnimationFrame(animateSpark);
-        }
-        requestAnimationFrame(animateSpark);
-      }
-    }
-
-    function loop() {
+    function loop(ts) {
+      // smooth cursor follow
       cx += (mx - cx) * 0.18;
       cy += (my - cy) * 0.18;
       cur.style.transform = `translate(${cx - 9}px, ${cy - 9}px)`;
+
+      // push current real mouse pos into trail
+      trail.push({ x: mx, y: my, t: ts });
+
+      // drop points older than TRAIL_MS
+      while (trail.length > 1 && ts - trail[0].t > TRAIL_MS) trail.shift();
+
+      // draw trail
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (trail.length >= 2) {
+        for (let i = 1; i < trail.length; i++) {
+          const age = ts - trail[i].t;
+          const alpha = Math.max(0, 1 - age / TRAIL_MS);
+          const width  = 2.5 * alpha;
+
+          ctx.beginPath();
+          ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
+          ctx.lineTo(trail[i].x, trail[i].y);
+
+          // glow layer
+          ctx.shadowColor = 'rgba(99,140,255,0.9)';
+          ctx.shadowBlur  = 10;
+          ctx.strokeStyle = `rgba(140,175,255,${alpha * 0.6})`;
+          ctx.lineWidth   = width + 4;
+          ctx.lineCap     = 'round';
+          ctx.stroke();
+
+          // bright core
+          ctx.shadowBlur  = 4;
+          ctx.strokeStyle = `rgba(200,220,255,${alpha})`;
+          ctx.lineWidth   = width;
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+      }
+
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
