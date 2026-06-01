@@ -544,7 +544,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin-bottom: 80px;
+      margin-bottom: 20px;
     }
     .ccard {
       border: 1px solid #d4d8e8;
@@ -574,6 +574,70 @@
     }
     .ccard-icon { color: #9098b0; }
     .ccard-icon svg { width: 18px; height: 18px; }
+
+    .candy-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1.5px dashed #f0aac8;
+      background: linear-gradient(135deg, #fff8fb, #fff3f8);
+      padding: 14px 22px;
+      margin-left: auto;
+      margin-bottom: 80px;
+      width: fit-content;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(220,100,140,0.08);
+      transition: border-color 0.25s, background 0.25s, transform 0.2s, box-shadow 0.2s;
+    }
+    .candy-card:hover {
+      border-color: #e05c8a;
+      background: linear-gradient(135deg, #fff0f6, #ffe8f2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(220,100,140,0.15);
+    }
+    .candy-card.carrying {
+      border-color: #e05c8a;
+      border-style: solid;
+      background: linear-gradient(135deg, #ffe3ed, #ffd6e7);
+    }
+    .candy-card-img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .candy-card-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: #c2416d;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    #candy-follower {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99996;
+      top: 0; left: 0;
+      width: 52px;
+      height: 52px;
+      display: none;
+      transform-origin: center center;
+    }
+    #candy-follower img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(200,80,120,0.35));
+    }
+    @keyframes candyPop {
+      0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+      60%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes candyDrop {
+      0%   { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.5) translateY(28px); }
+    }
 
     footer {
       max-width: 1380px;
@@ -1247,6 +1311,11 @@
       </a>
     </div>
 
+    <div class="candy-card" id="candy-trigger">
+      <img src="candy!.png" alt="candy" class="candy-card-img">
+      <span class="candy-card-text">Take a candy with you as you go!</span>
+    </div>
+
     <footer>
       <div class="footer-status">
         <span class="status-dot"></span>
@@ -1536,6 +1605,63 @@
         ctx.shadowBlur = 0;
       }
 
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+
+  // ── Candy follower ───────────────────────────────────────────────────
+  (function() {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
+    const trigger  = document.getElementById('candy-trigger');
+    const textSpan = trigger.querySelector('.candy-card-text');
+
+    const follower = document.createElement('div');
+    follower.id = 'candy-follower';
+    follower.innerHTML = '<img src="candy!.png" alt="candy">';
+    document.body.appendChild(follower);
+
+    let carrying = false;
+    let mx = -300, my = -300;
+    let fx = -300, fy = -300;
+    let rot = 0;
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    trigger.addEventListener('click', () => {
+      if (!carrying) {
+        carrying = true;
+        trigger.classList.add('carrying');
+        textSpan.textContent = 'enjoy your candy! ✦';
+        fx = mx; fy = my;
+        follower.style.display = 'block';
+        follower.style.animation = 'candyPop 0.4s cubic-bezier(0.16,1,0.3,1) both';
+      } else {
+        putDown();
+      }
+    });
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && carrying) putDown(); });
+
+    function putDown() {
+      carrying = false;
+      trigger.classList.remove('carrying');
+      textSpan.textContent = 'Take a candy with you as you go!';
+      follower.style.animation = 'candyDrop 0.35s ease-in both';
+      setTimeout(() => { follower.style.display = 'none'; follower.style.animation = ''; }, 350);
+    }
+
+    function loop() {
+      if (carrying) {
+        const prevFx = fx, prevFy = fy;
+        fx += (mx - fx) * 0.09;
+        fy += (my - fy) * 0.09;
+        const vx = fx - prevFx;
+        rot += (vx * 4 - rot) * 0.12;
+        rot = Math.max(-28, Math.min(28, rot));
+        follower.style.transform = `translate(${fx - 26}px, ${fy - 26}px) rotate(${rot}deg)`;
+      }
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
