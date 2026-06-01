@@ -621,9 +621,13 @@
       width: 52px;
       height: 52px;
       display: none;
+    }
+    .candy-inner {
+      width: 100%;
+      height: 100%;
       transform-origin: center center;
     }
-    #candy-follower img {
+    .candy-inner img {
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -634,9 +638,12 @@
       60%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
       100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
-    @keyframes candyDrop {
-      0%   { opacity: 1; transform: scale(1) translateY(0); }
-      100% { opacity: 0; transform: scale(0.5) translateY(28px); }
+    @keyframes candyBounce {
+      0%   { transform: scale(1) translateY(0); opacity: 1; }
+      25%  { transform: scale(0.9) translateY(8px); }
+      50%  { transform: scale(1.05) translateY(-5px); }
+      75%  { transform: scale(0.95) translateY(3px); opacity: 0.7; }
+      100% { transform: scale(0.6) translateY(0); opacity: 0; }
     }
 
     footer {
@@ -1617,9 +1624,14 @@
     const trigger  = document.getElementById('candy-trigger');
     const textSpan = trigger.querySelector('.candy-card-text');
 
+    // outer div: position only (no animation so JS transform isn't overridden)
     const follower = document.createElement('div');
     follower.id = 'candy-follower';
-    follower.innerHTML = '<img src="candy!.png" alt="candy">';
+    // inner div: pop/drop animations only
+    const inner = document.createElement('div');
+    inner.className = 'candy-inner';
+    inner.innerHTML = '<img src="candy!.png" alt="candy">';
+    follower.appendChild(inner);
     document.body.appendChild(follower);
 
     let carrying = false;
@@ -1630,26 +1642,30 @@
     document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
     trigger.addEventListener('click', () => {
-      if (!carrying) {
-        carrying = true;
-        trigger.classList.add('carrying');
-        textSpan.textContent = 'enjoy your candy! ✦';
-        fx = mx; fy = my;
-        follower.style.display = 'block';
-        follower.style.animation = 'candyPop 0.4s cubic-bezier(0.16,1,0.3,1) both';
-      } else {
-        putDown();
-      }
+      if (carrying) return;
+      carrying = true;
+      trigger.classList.add('carrying');
+      textSpan.textContent = 'enjoy your candy! ✦';
+      fx = mx; fy = my;
+      follower.style.pointerEvents = 'auto';
+      follower.style.display = 'block';
+      follower.style.transform = `translate(${fx - 26}px, ${fy - 26}px)`;
+      inner.style.animation = 'candyPop 0.4s cubic-bezier(0.16,1,0.3,1) both';
+      setTimeout(() => { inner.style.animation = ''; }, 420);
     });
+
+    // click the candy itself to put it down
+    follower.addEventListener('click', () => { if (carrying) putDown(); });
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && carrying) putDown(); });
 
     function putDown() {
       carrying = false;
+      follower.style.pointerEvents = 'none';
       trigger.classList.remove('carrying');
       textSpan.textContent = 'Take a candy with you as you go!';
-      follower.style.animation = 'candyDrop 0.35s ease-in both';
-      setTimeout(() => { follower.style.display = 'none'; follower.style.animation = ''; }, 350);
+      inner.style.animation = 'candyBounce 0.5s ease both';
+      setTimeout(() => { follower.style.display = 'none'; inner.style.animation = ''; }, 520);
     }
 
     function loop() {
