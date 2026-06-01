@@ -645,24 +645,10 @@
     * { cursor: none !important; }
     #custom-cursor {
       position: fixed;
-      width: 18px; height: 18px;
-      border: 2px solid #3b5bdb;
-      border-radius: 50%;
       pointer-events: none;
       z-index: 99999;
       top: 0; left: 0;
-      box-shadow: 0 0 8px rgba(59,91,219,0.5), inset 0 0 4px rgba(59,91,219,0.15);
-      transition: width 0.15s, height 0.15s, background 0.15s;
-      background: rgba(59,91,219,0.08);
-    }
-    #custom-cursor.hovering {
-      width: 28px; height: 28px;
-      background: rgba(59,91,219,0.15);
-      box-shadow: 0 0 14px rgba(59,91,219,0.6);
-    }
-    #custom-cursor.clicking {
-      width: 14px; height: 14px;
-      background: rgba(59,91,219,0.35);
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
     }
     #cursor-trail {
       position: fixed;
@@ -1479,9 +1465,13 @@
   (function() {
     if (!window.matchMedia('(hover: hover)').matches) return;
 
-    // cursor circle
+    // cursor arrow
     const cur = document.createElement('div');
     cur.id = 'custom-cursor';
+    cur.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="28" viewBox="0 0 24 28">
+      <path fill="black" stroke="black" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"
+        d="M4 2L4 22L9 17L13 26L16 25L12 16L19 16Z"/>
+    </svg>`;
     document.body.appendChild(cur);
 
     // canvas for trail
@@ -1504,20 +1494,11 @@
 
     document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-    document.addEventListener('mousedown', () => cur.classList.add('clicking'));
-    document.addEventListener('mouseup',   () => cur.classList.remove('clicking'));
-
-    const hoverSels = 'a, button, [role="button"], .proj-card, .exp-card, .ccard, label, .carousel-btn, #term-toggle';
-    document.querySelectorAll(hoverSels).forEach(el => {
-      el.addEventListener('mouseenter', () => cur.classList.add('hovering'));
-      el.addEventListener('mouseleave', () => cur.classList.remove('hovering'));
-    });
-
     function loop(ts) {
-      // smooth cursor follow
+      // smooth cursor follow — tip of arrow is at SVG point (4,2)
       cx += (mx - cx) * 0.18;
       cy += (my - cy) * 0.18;
-      cur.style.transform = `translate(${cx - 9}px, ${cy - 9}px)`;
+      cur.style.transform = `translate(${cx - 4}px, ${cy - 2}px)`;
 
       // push current real mouse pos into trail
       trail.push({ x: mx, y: my, t: ts });
