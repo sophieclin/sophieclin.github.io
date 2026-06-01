@@ -1501,7 +1501,7 @@
       cur.style.transform = `translate(${cx - 4}px, ${cy - 2}px)`;
 
       // push current real mouse pos into trail
-      trail.push({ x: mx, y: my, t: ts });
+      trail.push({ x: cx, y: cy, t: ts });
 
       // drop points older than TRAIL_MS
       while (trail.length > 1 && ts - trail[0].t > TRAIL_MS) trail.shift();
