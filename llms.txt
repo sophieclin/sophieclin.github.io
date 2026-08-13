@@ -1,0 +1,12 @@
+# Sophie Lin
+
+> Personal portfolio site for Sophie Lin, a software engineering student/practitioner.
+
+The site is a single-page portfolio covering:
+- Home / introduction
+- Projects (software engineering projects including LAAS, SEAS, ADAS, GATC, and others)
+- Experience (internships and work history)
+- Gallery (photos from GSEF, Global Ties Detroit, TechGirls, and other events)
+- Contact
+
+GitHub: https://github.com/sophieclin
